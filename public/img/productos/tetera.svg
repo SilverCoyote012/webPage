@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Ilustración de producto">
+  <rect width="600" height="600" fill="#efe3cf"/>
+  <circle cx="300" cy="300" r="232" fill="#f8f0e2"/>
+  <g stroke="#1b1a17" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M215 268a85 85 0 0 1 170 0" fill="none"/>
+    <path d="M408 318l52-34 14 20-48 50" fill="#fffdf8"/>
+    <path d="M196 290h208a112 100 0 0 1-208 0z" transform="translate(0 -6)" fill="none" stroke="none"/>
+    <ellipse cx="300" cy="350" rx="118" ry="88" fill="#c47a2c"/>
+    <path d="M222 284h156" /><circle cx="300" cy="254" r="13" fill="#fffdf8"/>
+  </g>
+</svg>

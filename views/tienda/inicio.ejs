@@ -1,0 +1,92 @@
+<%- include('../partials/head') %>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Importaciones seleccionadas</p>
+      <h1>Lo mejor del mundo, <em>hasta tu puerta.</em></h1>
+      <p class="lead">Tecnología, hogar, belleza y antojos que no encuentras en cualquier tienda. Los traemos nosotros; tú solo eliges.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary btn-lg" href="/productos">Ver productos</a>
+        <a class="btn btn-ghost btn-lg" href="/ayuda">¿Cómo funciona?</a>
+      </div>
+      <ul class="trust">
+        <li>Envío a todo México</li>
+        <li>Pago seguro con tarjeta</li>
+        <li>Productos originales</li>
+      </ul>
+    </div>
+    <% if (destacados.length >= 3) { %>
+    <div class="hero-stack" aria-hidden="true">
+      <% destacados.slice(0, 3).forEach((p, i) => { %>
+        <a class="parcel parcel-<%= i + 1 %>" href="/producto/<%= p.slug %>" tabindex="-1">
+          <img src="<%= p.image || '/img/sin-foto.svg' %>" alt="" width="600" height="600">
+          <span class="parcel-label">
+            <span class="parcel-from">Origen</span>
+            <strong><%= p.origin || 'Importado' %></strong>
+          </span>
+        </a>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (categorias.length) { %>
+<section class="section wrap">
+  <div class="section-head">
+    <h2>Explora por categoría</h2>
+  </div>
+  <div class="cat-grid">
+    <% categorias.forEach((c) => { %>
+      <a class="cat-tile" href="/productos?categoria=<%= c.slug %>">
+        <img src="<%= c.image || '/img/sin-foto.svg' %>" alt="" loading="lazy" width="600" height="600">
+        <span class="cat-name"><%= c.name %></span>
+        <span class="cat-count"><%= c.total %> <%= c.total === 1 ? 'producto' : 'productos' %></span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (destacados.length) { %>
+<section class="section wrap">
+  <div class="section-head">
+    <h2>Los más buscados</h2>
+    <a class="link-more" href="/productos">Ver todo</a>
+  </div>
+  <div class="grid">
+    <% destacados.forEach((p) => { %><%- include('../partials/tarjeta', { p }) %><% }) %>
+  </div>
+</section>
+<% } %>
+
+<section class="steps-band">
+  <div class="wrap">
+    <h2>Comprar es así de simple</h2>
+    <ol class="steps">
+      <li><span class="step-n">1</span><h3>Elige</h3><p>Agrega al carrito lo que te guste. Todo lo que ves está en existencia y listo para enviarse.</p></li>
+      <li><span class="step-n">2</span><h3>Paga seguro</h3><p>Paga con tarjeta de crédito o débito en una página cifrada. Nunca guardamos los datos de tu tarjeta.</p></li>
+      <li><span class="step-n">3</span><h3>Recibe en casa</h3><p>Enviamos a todo México y te compartimos tu número de guía para rastrear el paquete.</p></li>
+    </ol>
+  </div>
+</section>
+
+<% if (nuevos.length) { %>
+<section class="section wrap">
+  <div class="section-head">
+    <h2>Recién llegados</h2>
+    <a class="link-more" href="/productos">Ver todo</a>
+  </div>
+  <div class="grid">
+    <% nuevos.forEach((p) => { %><%- include('../partials/tarjeta', { p }) %><% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (!destacados.length && !nuevos.length) { %>
+<section class="section wrap empty">
+  <h2>Muy pronto</h2>
+  <p class="muted">Estamos preparando el catálogo. Vuelve en unos días.</p>
+</section>
+<% } %>
+<%- include('../partials/footer') %>

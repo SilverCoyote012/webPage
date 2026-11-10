@@ -1,0 +1,53 @@
+<%- include('../partials/head') %>
+<section class="wrap page">
+  <nav class="crumbs" aria-label="Ruta">
+    <a href="/">Inicio</a><span aria-hidden="true">/</span>
+    <% if (categoria || q) { %><a href="/productos">Productos</a><span aria-hidden="true">/</span><% } %>
+    <span><%= categoria ? categoria.name : (q ? 'Búsqueda' : 'Productos') %></span>
+  </nav>
+  <div class="page-head">
+    <h1><%= title %></h1>
+    <p class="muted"><%= total %> <%= total === 1 ? 'producto' : 'productos' %></p>
+  </div>
+
+  <div class="filters">
+    <div class="chips" role="list">
+      <a role="listitem" class="chip<%= categoriaSlug ? '' : ' is-on' %>" href="<%= linkFor({ categoria: '' }) %>">Todo</a>
+      <% categoriasNav.forEach((c) => { %>
+        <a role="listitem" class="chip<%= categoriaSlug === c.slug ? ' is-on' : '' %>" href="<%= linkFor({ categoria: c.slug }) %>"><%= c.name %></a>
+      <% }) %>
+    </div>
+    <form class="sort" action="/productos" method="get">
+      <% if (q) { %><input type="hidden" name="q" value="<%= q %>"><% } %>
+      <% if (categoriaSlug) { %><input type="hidden" name="categoria" value="<%= categoriaSlug %>"><% } %>
+      <label for="orden">Ordenar</label>
+      <select id="orden" name="orden" data-autosubmit>
+        <option value="recientes" <%= orden === 'recientes' ? 'selected' : '' %>>Más recientes</option>
+        <option value="precio-asc" <%= orden === 'precio-asc' ? 'selected' : '' %>>Precio: menor a mayor</option>
+        <option value="precio-desc" <%= orden === 'precio-desc' ? 'selected' : '' %>>Precio: mayor a menor</option>
+        <option value="nombre" <%= orden === 'nombre' ? 'selected' : '' %>>Nombre (A–Z)</option>
+      </select>
+      <noscript><button class="btn btn-ghost" type="submit">Aplicar</button></noscript>
+    </form>
+  </div>
+
+  <% if (productos.length) { %>
+    <div class="grid">
+      <% productos.forEach((p) => { %><%- include('../partials/tarjeta', { p }) %><% }) %>
+    </div>
+    <% if (pages > 1) { %>
+      <nav class="pager" aria-label="Páginas">
+        <% if (page > 1) { %><a class="btn btn-ghost" href="<%= linkFor({ pagina: page - 1 > 1 ? String(page - 1) : '' }) %>">← Anterior</a><% } %>
+        <span class="muted">Página <%= page %> de <%= pages %></span>
+        <% if (page < pages) { %><a class="btn btn-ghost" href="<%= linkFor({ pagina: String(page + 1) }) %>">Siguiente →</a><% } %>
+      </nav>
+    <% } %>
+  <% } else { %>
+    <div class="empty">
+      <h2>No encontramos productos</h2>
+      <p class="muted">Prueba con otra palabra o revisa todas las categorías.</p>
+      <a class="btn btn-primary" href="/productos">Ver todos los productos</a>
+    </div>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

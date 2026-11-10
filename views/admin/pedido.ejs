@@ -1,0 +1,84 @@
+<%- include('_inicio') %>
+<% const estado = ESTADOS_PEDIDO[order.status]; %>
+<header class="head">
+  <div>
+    <a class="more" href="/admin/pedidos">← Pedidos</a>
+    <h1>Pedido <%= numeroPedido(order.id) %> <span class="pill pill-<%= estado.tone %>"><%= estado.label %></span></h1>
+    <p class="muted small">Creado el <%= fecha(order.created_at) %><% if (order.paid_at) { %> · Pagado el <%= fecha(order.paid_at) %><% } %></p>
+  </div>
+  <a class="btn" href="/pedido/<%= order.token %>" target="_blank" rel="noopener">Página que ve el cliente ↗</a>
+</header>
+
+<div class="form-grid">
+  <div class="stack">
+    <section class="card">
+      <h2>Productos</h2>
+      <table class="table">
+        <tbody>
+        <% items.forEach((item) => { %>
+          <tr>
+            <td class="thumb-cell"><img class="thumb" src="<%= item.image || '/img/sin-foto.svg' %>" alt=""></td>
+            <td><%= item.name %><br><span class="muted small"><%= item.quantity %> × <%= money(item.price_cents) %></span></td>
+            <td class="num"><%= money(item.price_cents * item.quantity) %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" class="num muted">Subtotal</td><td class="num"><%= money(order.subtotal_cents) %></td></tr>
+          <tr><td colspan="2" class="num muted">Envío</td><td class="num"><%= order.shipping_cents ? money(order.shipping_cents) : 'Gratis' %></td></tr>
+          <tr><td colspan="2" class="num"><strong>Total</strong></td><td class="num"><strong><%= money(order.total_cents) %></strong></td></tr>
+        </tfoot>
+      </table>
+    </section>
+
+    <section class="card">
+      <h2>Cliente y envío</h2>
+      <div class="row">
+        <div>
+          <p><strong><%= order.customer_name %></strong><br>
+            <a href="mailto:<%= order.email %>"><%= order.email %></a><br>
+            <a href="tel:<%= order.phone %>"><%= order.phone %></a></p>
+        </div>
+        <div>
+          <p><%= order.address_line %><br><%= order.neighborhood %>, C.P. <%= order.postal_code %><br><%= order.city %>, <%= order.state %></p>
+        </div>
+      </div>
+      <% if (order.notes) { %><p class="note"><strong>Referencias:</strong> <%= order.notes %></p><% } %>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="card">
+      <h2>Actualizar pedido</h2>
+      <form method="post" action="/admin/pedidos/<%= order.id %>">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <label for="status">Estado</label>
+        <select id="status" name="status">
+          <% Object.entries(ESTADOS_PEDIDO).forEach(([key, e]) => { %>
+            <option value="<%= key %>" <%= order.status === key ? 'selected' : '' %>><%= e.label %></option>
+          <% }) %>
+        </select>
+        <label for="tracking">Número de guía</label>
+        <input id="tracking" name="tracking" value="<%= order.tracking %>" maxlength="120" placeholder="Paquetería y número">
+        <p class="hint">El cliente ve el estado y la guía en la página de su pedido.</p>
+        <button class="btn btn-primary btn-wide" type="submit">Guardar</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Pago</h2>
+      <p class="small">
+        <% if (order.payment_provider === 'stripe') { %>
+          Stripe<% if (order.async_pending) { %> · esperando pago diferido (p. ej. OXXO)<% } %><br>
+          <span class="muted mono"><%= order.payment_ref %></span>
+        <% } else if (order.payment_provider === 'demo') { %>
+          Pago simulado (modo demostración).
+        <% } else { %>
+          Sin información de pago.
+        <% } %>
+      </p>
+      <p class="hint">Al cancelar un pedido las piezas regresan al inventario. Si el cliente ya pagó, el reembolso se hace desde tu cuenta de Stripe.</p>
+    </section>
+  </div>
+</div>
+<%- include('_fin') %>

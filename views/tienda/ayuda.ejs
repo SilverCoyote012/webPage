@@ -1,0 +1,31 @@
+<%- include('../partials/head') %>
+<section class="wrap page page-narrow prose">
+  <div class="page-head"><h1>Ayuda</h1></div>
+
+  <h2>¿Cómo compro?</h2>
+  <p>Agrega productos al carrito, escribe tu dirección de envío y paga con tarjeta de crédito o débito. Al terminar verás una página con el estado de tu pedido; guarda el enlace para consultarlo cuando quieras.</p>
+
+  <h2>Envíos</h2>
+  <p>
+    Enviamos a todo México por paquetería.
+    <% if (tienda.shipping_cents > 0) { %>El envío cuesta <strong><%= money(tienda.shipping_cents) %></strong><% if (tienda.free_shipping_from_cents > 0) { %> y es <strong>gratis en compras desde <%= money(tienda.free_shipping_from_cents) %></strong><% } %>.<% } else { %>El envío es <strong>gratis</strong>.<% } %>
+    Cuando tu paquete salga verás el número de guía en la página de tu pedido.
+  </p>
+
+  <h2>Pagos</h2>
+  <p>Los pagos se procesan en una página cifrada de nuestro proveedor de pagos. Esta tienda no recibe ni almacena los datos de tu tarjeta. Todos los precios están en pesos mexicanos e incluyen IVA.</p>
+
+  <h2>Cambios y devoluciones</h2>
+  <p>Si tu producto llegó dañado o no es lo que pediste, escríbenos con tu número de pedido y lo resolvemos.</p>
+
+  <h2 id="contacto">Contacto</h2>
+  <% if (tienda.whatsapp || tienda.contact_email) { %>
+    <ul>
+      <% if (tienda.whatsapp) { %><li>WhatsApp: <a href="https://wa.me/<%= tienda.whatsapp %>" rel="noopener">+<%= tienda.whatsapp %></a></li><% } %>
+      <% if (tienda.contact_email) { %><li>Correo: <a href="mailto:<%= tienda.contact_email %>"><%= tienda.contact_email %></a></li><% } %>
+    </ul>
+  <% } else { %>
+    <p class="muted">Pronto publicaremos aquí nuestros datos de contacto.</p>
+  <% } %>
+</section>
+<%- include('../partials/footer') %>

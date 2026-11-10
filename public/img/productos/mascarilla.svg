@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Ilustración de producto">
+  <rect width="600" height="600" fill="#f4dcdd"/>
+  <circle cx="300" cy="300" r="232" fill="#fbeeee"/>
+  <g stroke="#1b1a17" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M212 170h176q22 0 22 22v112q0 126-110 126T190 304V192q0-22 22-22z" fill="#fffdf8"/>
+    <ellipse cx="256" cy="278" rx="27" ry="15" fill="#cf6078" stroke-width="6"/>
+    <ellipse cx="344" cy="278" rx="27" ry="15" fill="#cf6078" stroke-width="6"/>
+    <path d="M300 300v34" stroke-width="6"/><ellipse cx="300" cy="376" rx="28" ry="10" fill="#cf6078" stroke-width="6"/>
+  </g>
+</svg>

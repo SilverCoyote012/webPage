@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title><%= title %> · Panel de <%= tienda.store_name %></title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/admin.css">
+  <script src="/js/admin.js" defer></script>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="side-brand" href="/admin"><span class="logo-mark" aria-hidden="true"></span><%= tienda.store_name %></a>
+    <nav aria-label="Panel">
+      <a href="/admin" <%- seccion === 'resumen' ? 'aria-current="page"' : '' %>>Resumen</a>
+      <a href="/admin/pedidos" <%- seccion === 'pedidos' ? 'aria-current="page"' : '' %>>Pedidos</a>
+      <a href="/admin/productos" <%- seccion === 'productos' ? 'aria-current="page"' : '' %>>Productos</a>
+      <a href="/admin/categorias" <%- seccion === 'categorias' ? 'aria-current="page"' : '' %>>Categorías</a>
+      <a href="/admin/ajustes" <%- seccion === 'ajustes' ? 'aria-current="page"' : '' %>>Ajustes</a>
+    </nav>
+    <div class="side-foot">
+      <a href="/" target="_blank" rel="noopener">Ver la tienda ↗</a>
+      <form method="post" action="/admin/logout">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button class="linklike" type="submit">Cerrar sesión</button>
+      </form>
+    </div>
+  </aside>
+  <main class="main">
+    <% if (paymentMode === 'demo') { %>
+      <p class="alert alert-warn"><strong>Pagos en modo demostración.</strong> Los cobros son simulados. Para cobrar de verdad agrega tus claves de Stripe (consulta <a href="/admin/ajustes#pagos">Ajustes → Pagos</a>).</p>
+    <% } %>
+    <% if (aviso) { %><p class="alert alert-ok" role="status"><%= aviso %></p><% } %>

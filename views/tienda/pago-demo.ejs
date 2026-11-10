@@ -1,0 +1,18 @@
+<%- include('../partials/head') %>
+<section class="wrap page page-narrow">
+  <div class="panel demo-pay">
+    <p class="eyebrow">Modo demostración</p>
+    <h1>Pago de prueba</h1>
+    <p class="lead">Aquí aparecerá la página de pago con tarjeta cuando conectes tu cuenta de Stripe. Por ahora puedes simular el resultado; <strong>no se realiza ningún cobro</strong>.</p>
+    <dl class="totals">
+      <div><dt>Pedido</dt><dd><%= numeroPedido(order.id) %></dd></div>
+      <div><dt><%= items.reduce((n, i) => n + i.quantity, 0) %> piezas + envío</dt><dd></dd></div>
+      <div class="totals-total"><dt>Total a pagar</dt><dd><%= money(order.total_cents) %></dd></div>
+    </dl>
+    <form method="post" action="/pago-demo/<%= order.token %>" class="demo-actions">
+      <button class="btn btn-primary btn-lg" name="resultado" value="aprobado">Simular pago aprobado</button>
+      <button class="btn btn-ghost btn-lg" name="resultado" value="rechazado">Simular pago rechazado</button>
+    </form>
+  </div>
+</section>
+<%- include('../partials/footer') %>

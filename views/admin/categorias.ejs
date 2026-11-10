@@ -1,0 +1,38 @@
+<%- include('_inicio') %>
+<header class="head"><h1>Categorías</h1></header>
+
+<section class="card">
+  <h2>Nueva categoría</h2>
+  <form class="toolbar" method="post" action="/admin/categorias">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <input name="name" required maxlength="60" placeholder="Por ejemplo: Mascotas" aria-label="Nombre de la categoría">
+    <button class="btn btn-primary" type="submit">Agregar</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Categorías actuales</h2>
+  <% if (categorias.length) { %>
+    <p class="hint">El número de orden decide cómo se acomodan en la tienda (primero el menor).</p>
+    <ul class="cat-rows">
+      <% categorias.forEach((c) => { %>
+        <li>
+          <form class="cat-form" method="post" action="/admin/categorias/<%= c.id %>">
+            <input type="hidden" name="_csrf" value="<%= csrf %>">
+            <input name="name" value="<%= c.name %>" required maxlength="60" aria-label="Nombre">
+            <input class="narrow" name="position" type="number" value="<%= c.position %>" aria-label="Orden">
+            <span class="muted small"><%= c.total %> <%= c.total === 1 ? 'producto' : 'productos' %></span>
+            <button class="btn" type="submit">Guardar</button>
+          </form>
+          <form method="post" action="/admin/categorias/<%= c.id %>/eliminar" data-confirm="¿Eliminar la categoría «<%= c.name %>»? Sus productos no se borran; quedan sin categoría.">
+            <input type="hidden" name="_csrf" value="<%= csrf %>">
+            <button class="linklike linklike-danger" type="submit">Eliminar</button>
+          </form>
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p class="muted">Aún no hay categorías.</p>
+  <% } %>
+</section>
+<%- include('_fin') %>

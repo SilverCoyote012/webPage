@@ -1,0 +1,27 @@
+<%
+  const agotado = p.stock <= 0;
+  const descuento = p.compare_price_cents ? Math.round((1 - p.price_cents / p.compare_price_cents) * 100) : 0;
+%>
+<article class="card<%= agotado ? ' is-out' : '' %>">
+  <a class="card-media" href="/producto/<%= p.slug %>" tabindex="-1" aria-hidden="true">
+    <img src="<%= p.image || '/img/sin-foto.svg' %>" alt="" loading="lazy" width="600" height="600">
+    <% if (p.origin) { %><span class="origin-tag"><%= p.origin %></span><% } %>
+    <% if (agotado) { %><span class="badge badge-out">Agotado</span>
+    <% } else if (descuento >= 5) { %><span class="badge badge-sale">−<%= descuento %>%</span><% } %>
+  </a>
+  <div class="card-body">
+    <% if (p.category_name) { %><p class="card-cat"><%= p.category_name %></p><% } %>
+    <h3 class="card-title"><a href="/producto/<%= p.slug %>"><%= p.name %></a></h3>
+    <div class="card-foot">
+      <p class="price">
+        <span class="price-now"><%= money(p.price_cents) %></span>
+        <% if (p.compare_price_cents) { %><s class="price-was"><%= money(p.compare_price_cents) %></s><% } %>
+      </p>
+      <% if (!agotado) { %>
+        <button class="btn-add" type="button" data-add="<%= p.id %>" data-max="<%= p.stock %>" aria-label="Agregar <%= p.name %> al carrito">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </button>
+      <% } %>
+    </div>
+  </div>
+</article>

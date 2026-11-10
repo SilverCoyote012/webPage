@@ -1,0 +1,81 @@
+<%- include('_inicio') %>
+<header class="head"><h1>Ajustes</h1></header>
+
+<% if (error) { %><p class="alert alert-error" role="alert"><%= error %></p><% } %>
+
+<form class="card" method="post" action="/admin/ajustes">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <h2>Tienda</h2>
+  <div class="row">
+    <div>
+      <label for="store_name">Nombre de la tienda</label>
+      <input id="store_name" name="store_name" value="<%= ajustes.store_name %>" required maxlength="40">
+    </div>
+    <div>
+      <label for="tagline">Frase corta</label>
+      <input id="tagline" name="tagline" value="<%= ajustes.tagline %>" maxlength="90">
+    </div>
+  </div>
+  <label for="announcement">Anuncio de la barra superior <span class="muted">(opcional)</span></label>
+  <input id="announcement" name="announcement" value="<%= ajustes.announcement %>" maxlength="120" placeholder="Si lo dejas vacío se anuncia el envío gratis">
+
+  <h2 class="spaced">Contacto</h2>
+  <div class="row">
+    <div>
+      <label for="whatsapp">WhatsApp con lada de país</label>
+      <input id="whatsapp" name="whatsapp" value="<%= ajustes.whatsapp %>" inputmode="numeric" maxlength="20" placeholder="5215512345678">
+    </div>
+    <div>
+      <label for="contact_email">Correo de atención a clientes</label>
+      <input id="contact_email" name="contact_email" type="email" value="<%= ajustes.contact_email %>" maxlength="160">
+    </div>
+  </div>
+
+  <h2 class="spaced">Envíos</h2>
+  <div class="row">
+    <div>
+      <label for="shipping">Costo de envío (MXN)</label>
+      <input id="shipping" name="shipping" inputmode="decimal" value="<%= centsToInput(ajustes.shipping_cents) %>">
+    </div>
+    <div>
+      <label for="free_shipping_from">Envío gratis a partir de (MXN)</label>
+      <input id="free_shipping_from" name="free_shipping_from" inputmode="decimal" value="<%= centsToInput(ajustes.free_shipping_from_cents) %>">
+      <p class="hint">Escribe 0 para no ofrecer envío gratis.</p>
+    </div>
+  </div>
+  <button class="btn btn-primary" type="submit">Guardar ajustes</button>
+</form>
+
+<section class="card" id="pagos">
+  <h2>Pagos</h2>
+  <% if (paymentMode === 'stripe') { %>
+    <p><span class="pill <%= isTestMode ? 'pill-warn' : 'pill-ok' %>"><%= isTestMode ? 'Stripe · modo de prueba' : 'Stripe · cobrando de verdad' %></span></p>
+    <% if (isTestMode) { %><p class="small">Estás usando claves de prueba (<span class="mono">sk_test_…</span>). Usa la tarjeta 4242 4242 4242 4242 para probar. Al lanzar, cámbialas por las claves reales.</p><% } %>
+    <p class="small">Webhook: <strong><%= webhookListo ? 'configurado' : 'falta configurarlo' %></strong>. Dirección para registrar en Stripe: <span class="mono"><%= baseUrl %>/webhooks/stripe</span></p>
+  <% } else { %>
+    <p><span class="pill pill-warn">Modo demostración</span></p>
+    <p class="small">Para cobrar con tarjeta, crea una cuenta en Stripe y agrega <span class="mono">STRIPE_SECRET_KEY</span> y <span class="mono">STRIPE_WEBHOOK_SECRET</span> en el archivo <span class="mono">.env</span> del servidor; después reinicia la tienda. Los pasos están en el archivo README.md.</p>
+  <% } %>
+  <p class="hint">Las claves de pago se guardan en el servidor, no en este panel, para que nadie pueda verlas desde el navegador.</p>
+</section>
+
+<form class="card" method="post" action="/admin/ajustes/password">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <h2>Cambiar contraseña</h2>
+  <% if (passwordError) { %><p class="alert alert-error" role="alert"><%= passwordError %></p><% } %>
+  <p class="small muted">Sesión iniciada como <%= admin.email %>.</p>
+  <label for="current">Contraseña actual</label>
+  <input id="current" name="current" type="password" autocomplete="current-password" required>
+  <div class="row">
+    <div>
+      <label for="password">Nueva contraseña</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="10" required>
+    </div>
+    <div>
+      <label for="confirm">Repite la nueva contraseña</label>
+      <input id="confirm" name="confirm" type="password" autocomplete="new-password" minlength="10" required>
+    </div>
+  </div>
+  <button class="btn" type="submit">Cambiar contraseña</button>
+</form>
+<%- include('_fin') %>

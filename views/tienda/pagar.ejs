@@ -1,0 +1,92 @@
+<%- include('../partials/head') %>
+<section class="wrap page">
+  <nav class="crumbs" aria-label="Ruta">
+    <a href="/carrito">Carrito</a><span aria-hidden="true">/</span><span>Datos de envío</span><span aria-hidden="true">/</span><span class="muted">Pago</span>
+  </nav>
+  <div class="page-head"><h1>Finalizar compra</h1></div>
+
+  <div class="empty" data-checkout-empty hidden>
+    <h2>Tu carrito está vacío</h2>
+    <a class="btn btn-primary" href="/productos">Ver productos</a>
+  </div>
+
+  <div class="cart-layout" data-checkout hidden>
+    <form class="form" data-checkout-form novalidate>
+      <fieldset>
+        <legend>Tus datos</legend>
+        <div class="field">
+          <label for="nombre">Nombre completo</label>
+          <input id="nombre" name="nombre" autocomplete="name" required maxlength="120">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">Correo electrónico</label>
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="160">
+          </div>
+          <div class="field">
+            <label for="telefono">Teléfono (10 dígitos)</label>
+            <input id="telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Dirección de envío</legend>
+        <div class="field">
+          <label for="direccion">Calle y número</label>
+          <input id="direccion" name="direccion" autocomplete="address-line1" required maxlength="200" placeholder="Av. Reforma 123, int. 4">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="colonia">Colonia</label>
+            <input id="colonia" name="colonia" autocomplete="address-line2" required maxlength="120">
+          </div>
+          <div class="field field-sm">
+            <label for="cp">Código postal</label>
+            <input id="cp" name="cp" autocomplete="postal-code" inputmode="numeric" pattern="\d{5}" required maxlength="5">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="ciudad">Ciudad o municipio</label>
+            <input id="ciudad" name="ciudad" autocomplete="address-level2" required maxlength="120">
+          </div>
+          <div class="field">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" autocomplete="address-level1" required>
+              <option value="">Selecciona…</option>
+              <% estados.forEach((e) => { %><option><%= e %></option><% }) %>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="notas">Referencias para la entrega <span class="muted">(opcional)</span></label>
+          <textarea id="notas" name="notas" rows="2" maxlength="500" placeholder="Entre calles, color de la fachada, horario…"></textarea>
+        </div>
+      </fieldset>
+
+      <p class="notice notice-error" data-checkout-error role="alert" hidden></p>
+      <button class="btn btn-primary btn-lg btn-block" type="submit" data-checkout-submit>Continuar al pago seguro</button>
+      <p class="fine">
+        <% if (paymentMode === 'stripe') { %>
+          Pagarás en una página cifrada de Stripe. No guardamos los datos de tu tarjeta.
+        <% } else { %>
+          Modo demostración: en el siguiente paso podrás simular el pago sin usar una tarjeta.
+        <% } %>
+      </p>
+    </form>
+
+    <aside class="summary" aria-label="Resumen del pedido">
+      <h2>Tu pedido</h2>
+      <ul class="mini-list" data-checkout-items></ul>
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd data-sum-subtotal></dd></div>
+        <div><dt>Envío</dt><dd data-sum-shipping></dd></div>
+        <div class="totals-total"><dt>Total</dt><dd data-sum-total></dd></div>
+      </dl>
+      <a class="link-more" href="/carrito">Editar carrito</a>
+    </aside>
+  </div>
+  <noscript><p class="notice notice-warn">Para comprar necesitas activar JavaScript en tu navegador.</p></noscript>
+</section>
+<%- include('../partials/footer') %>

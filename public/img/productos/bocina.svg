@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Ilustración de producto">
+  <rect width="600" height="600" fill="#dde6f0"/>
+  <circle cx="300" cy="300" r="232" fill="#eef3f8"/>
+  <g stroke="#1b1a17" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <rect x="205" y="150" width="190" height="300" rx="40" fill="#fffdf8"/>
+    <circle cx="300" cy="350" r="58" fill="#3f6fb0"/><circle cx="300" cy="350" r="18" fill="#fffdf8" stroke-width="6"/>
+    <circle cx="300" cy="225" r="26" fill="#fffdf8"/>
+  </g>
+</svg>

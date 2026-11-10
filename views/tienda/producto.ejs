@@ -1,0 +1,73 @@
+<%
+  const agotado = producto.stock <= 0;
+  const descuento = producto.compare_price_cents ? Math.round((1 - producto.price_cents / producto.compare_price_cents) * 100) : 0;
+%>
+<%- include('../partials/head', { description: producto.description.split('\n')[0].slice(0, 155) }) %>
+<section class="wrap page">
+  <nav class="crumbs" aria-label="Ruta">
+    <a href="/">Inicio</a><span aria-hidden="true">/</span>
+    <a href="/productos">Productos</a><span aria-hidden="true">/</span>
+    <% if (producto.category_slug) { %><a href="/productos?categoria=<%= producto.category_slug %>"><%= producto.category_name %></a><span aria-hidden="true">/</span><% } %>
+    <span><%= producto.name %></span>
+  </nav>
+
+  <div class="product">
+    <div class="product-media">
+      <img src="<%= producto.image || '/img/sin-foto.svg' %>" alt="<%= producto.name %>" width="600" height="600">
+    </div>
+    <div class="product-info">
+      <% if (producto.origin) { %>
+        <p class="stamp"><span>Importado de</span> <strong><%= producto.origin %></strong></p>
+      <% } %>
+      <h1><%= producto.name %></h1>
+      <p class="price price-lg">
+        <span class="price-now"><%= money(producto.price_cents) %></span>
+        <% if (producto.compare_price_cents) { %>
+          <s class="price-was"><%= money(producto.compare_price_cents) %></s>
+          <% if (descuento >= 5) { %><span class="badge badge-sale badge-inline">−<%= descuento %>%</span><% } %>
+        <% } %>
+      </p>
+      <p class="stock <%= agotado ? 'stock-out' : (producto.stock <= 3 ? 'stock-low' : 'stock-ok') %>">
+        <%= agotado ? 'Agotado por ahora' : (producto.stock <= 3 ? `¡Últimas ${producto.stock} piezas!` : 'En existencia · listo para enviarse') %>
+      </p>
+
+      <% if (!agotado) { %>
+        <div class="buy">
+          <div class="qty" data-qty>
+            <button type="button" data-qty-minus aria-label="Quitar una pieza">−</button>
+            <input type="number" value="1" min="1" max="<%= Math.min(producto.stock, 99) %>" inputmode="numeric" aria-label="Cantidad" data-qty-input>
+            <button type="button" data-qty-plus aria-label="Agregar una pieza">+</button>
+          </div>
+          <button class="btn btn-primary btn-lg buy-btn" type="button" data-add="<%= producto.id %>" data-max="<%= producto.stock %>" data-use-qty>Agregar al carrito</button>
+        </div>
+      <% } else if (tienda.whatsapp) { %>
+        <a class="btn btn-ghost btn-lg" href="https://wa.me/<%= tienda.whatsapp %>?text=<%= encodeURIComponent(`Hola, ¿cuándo tendrán de nuevo "${producto.name}"?`) %>" rel="noopener">Avísenme cuando llegue</a>
+      <% } %>
+
+      <ul class="perks">
+        <li><strong>Envío:</strong>
+          <%= tienda.shipping_cents > 0 ? `${money(tienda.shipping_cents)} a todo México` : 'gratis a todo México' %><% if (tienda.shipping_cents > 0 && tienda.free_shipping_from_cents > 0) { %>; gratis desde <%= money(tienda.free_shipping_from_cents) %><% } %>.
+        </li>
+        <li><strong>Pago seguro</strong> con tarjeta de crédito o débito.</li>
+        <li><strong>Producto original</strong>, importado directamente.</li>
+      </ul>
+
+      <% if (producto.description) { %>
+        <div class="desc">
+          <h2>Descripción</h2>
+          <% producto.description.split(/\n{2,}/).forEach((parrafo) => { %><p><%= parrafo %></p><% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<% if (relacionados.length) { %>
+<section class="section wrap">
+  <div class="section-head"><h2>También te puede gustar</h2></div>
+  <div class="grid">
+    <% relacionados.forEach((p) => { %><%- include('../partials/tarjeta', { p }) %><% }) %>
+  </div>
+</section>
+<% } %>
+<%- include('../partials/footer') %>

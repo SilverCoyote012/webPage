@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Ilustración de producto">
+  <rect width="600" height="600" fill="#d9e9d5"/>
+  <circle cx="300" cy="300" r="232" fill="#ecf5e9"/>
+  <g stroke="#1b1a17" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <rect x="212" y="140" width="176" height="300" rx="14" fill="#7a4a2b"/>
+    <path d="M212 215h176M212 290h176M300 140v170" fill="none" stroke-width="6"/>
+    <rect x="198" y="310" width="204" height="150" rx="10" fill="#fffdf8"/>
+    <rect x="232" y="352" width="136" height="66" rx="8" fill="#4c8a49" stroke-width="6"/>
+  </g>
+</svg>

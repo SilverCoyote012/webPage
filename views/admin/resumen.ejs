@@ -1,0 +1,71 @@
+<%- include('_inicio') %>
+<header class="head"><h1>Resumen</h1></header>
+
+<div class="stats">
+  <div class="stat"><p class="stat-label">Ventas de hoy</p><p class="stat-value"><%= money(ventas.hoy) %></p></div>
+  <div class="stat"><p class="stat-label">Ventas, últimos 30 días</p><p class="stat-value"><%= money(ventas.mes) %></p><p class="stat-note"><%= ventas.pedidos_mes %> <%= ventas.pedidos_mes === 1 ? 'pedido pagado' : 'pedidos pagados' %></p></div>
+  <a class="stat stat-link<%= porEnviar ? ' stat-hot' : '' %>" href="/admin/pedidos?estado=pagado"><p class="stat-label">Por enviar</p><p class="stat-value"><%= porEnviar %></p><p class="stat-note"><%= porEnviar ? 'Pedidos pagados esperando envío →' : 'Todo al día' %></p></a>
+  <a class="stat stat-link" href="/admin/productos"><p class="stat-label">Productos</p><p class="stat-value"><%= totalProductos %></p><p class="stat-note">Administrar catálogo →</p></a>
+</div>
+
+<%
+  const maximo = Math.max(...dias.map((d) => d.total), 1);
+  const hayVentas = dias.some((d) => d.total > 0);
+%>
+<section class="card">
+  <h2>Ventas por día <span class="muted">· últimos 14 días</span></h2>
+  <% if (hayVentas) { %>
+    <div class="bars" role="img" aria-label="Ventas diarias de los últimos 14 días">
+      <% dias.forEach((d) => { %>
+        <div class="bar-col" title="<%= d.label %>: <%= money(d.total) %>">
+          <div class="bar" style="height: <%= Math.max(Math.round((d.total / maximo) * 100), d.total ? 3 : 0) %>%"></div>
+          <span><%= d.label %></span>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="muted">Todavía no hay ventas en este periodo. Cuando entre el primer pedido pagado aparecerá aquí.</p>
+  <% } %>
+</section>
+
+<div class="two">
+  <section class="card">
+    <h2>Pedidos recientes</h2>
+    <% if (recientes.length) { %>
+      <table class="table">
+        <tbody>
+        <% recientes.forEach((o) => { %>
+          <tr>
+            <td><a href="/admin/pedidos/<%= o.id %>"><strong><%= numeroPedido(o.id) %></strong></a><br><span class="muted small"><%= o.customer_name %></span></td>
+            <td><span class="pill pill-<%= ESTADOS_PEDIDO[o.status].tone %>"><%= ESTADOS_PEDIDO[o.status].label %></span></td>
+            <td class="num"><%= money(o.total_cents) %></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+      <a class="more" href="/admin/pedidos">Ver todos los pedidos →</a>
+    <% } else { %>
+      <p class="muted">Aún no hay pedidos.</p>
+    <% } %>
+  </section>
+
+  <section class="card">
+    <h2>Poco inventario</h2>
+    <% if (pocoStock.length) { %>
+      <table class="table">
+        <tbody>
+        <% pocoStock.forEach((p) => { %>
+          <tr>
+            <td class="thumb-cell"><img class="thumb" src="<%= p.image || '/img/sin-foto.svg' %>" alt=""></td>
+            <td><a href="/admin/productos/<%= p.id %>"><%= p.name %></a></td>
+            <td class="num"><span class="pill <%= p.stock === 0 ? 'pill-off' : 'pill-warn' %>"><%= p.stock === 0 ? 'Agotado' : `${p.stock} pzas.` %></span></td>
+          </tr>
+        <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="muted">Todos los productos tienen más de 3 piezas.</p>
+    <% } %>
+  </section>
+</div>
+<%- include('_fin') %>

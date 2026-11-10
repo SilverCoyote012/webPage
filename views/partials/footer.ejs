@@ -1,0 +1,32 @@
+</main>
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <p class="logo logo-footer"><span class="logo-mark" aria-hidden="true"></span><%= tienda.store_name %></p>
+      <p class="muted"><%= tienda.tagline %></p>
+    </div>
+    <div>
+      <h2>Tienda</h2>
+      <ul>
+        <li><a href="/productos">Todos los productos</a></li>
+        <li><a href="/carrito">Carrito</a></li>
+        <li><a href="/ayuda">Envíos y devoluciones</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2>Contacto</h2>
+      <ul>
+        <% if (tienda.whatsapp) { %><li><a href="https://wa.me/<%= tienda.whatsapp %>" rel="noopener">WhatsApp</a></li><% } %>
+        <% if (tienda.contact_email) { %><li><a href="mailto:<%= tienda.contact_email %>"><%= tienda.contact_email %></a></li><% } %>
+        <li><a href="/ayuda#contacto">Atención a clientes</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© <%= new Date().getFullYear() %> <%= tienda.store_name %>. Precios en pesos mexicanos (MXN), IVA incluido.</span>
+    <span class="pay-note">Pago seguro con tarjeta</span>
+  </div>
+</footer>
+<div class="toast" data-toast role="status" aria-live="polite" hidden></div>
+</body>
+</html>

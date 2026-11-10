@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Ilustración de producto">
+  <rect width="600" height="600" fill="#e1e3d8"/>
+  <circle cx="300" cy="300" r="232" fill="#f0f1ea"/>
+  <g stroke="#1b1a17" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M158 296l-34-42M442 296l34-42" fill="none"/>
+    <circle cx="222" cy="312" r="66" fill="#5d6f4d"/><circle cx="378" cy="312" r="66" fill="#5d6f4d"/>
+    <path d="M286 300q14-20 28 0" fill="none"/>
+  </g>
+</svg>

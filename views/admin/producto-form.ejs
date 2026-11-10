@@ -1,0 +1,85 @@
+<%- include('_inicio') %>
+<header class="head">
+  <div>
+    <a class="more" href="/admin/productos">← Productos</a>
+    <h1><%= producto.id ? producto.name : 'Nuevo producto' %></h1>
+  </div>
+  <% if (producto.id && producto.slug) { %><a class="btn" href="/producto/<%= producto.slug %>" target="_blank" rel="noopener">Ver en la tienda ↗</a><% } %>
+</header>
+
+<% if (error) { %><p class="alert alert-error" role="alert"><%= error %></p><% } %>
+
+<form class="form-grid" method="post" action="/admin/productos<%= producto.id ? `/${producto.id}` : '' %>" enctype="multipart/form-data">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <div class="stack">
+    <section class="card">
+      <h2>Información</h2>
+      <label for="name">Nombre</label>
+      <input id="name" name="name" value="<%= producto.name %>" required maxlength="140">
+      <label for="description">Descripción</label>
+      <textarea id="description" name="description" rows="7" maxlength="4000"><%= producto.description %></textarea>
+      <p class="hint">Deja una línea en blanco para separar párrafos.</p>
+      <div class="row">
+        <div>
+          <label for="category_id">Categoría</label>
+          <select id="category_id" name="category_id">
+            <option value="">Sin categoría</option>
+            <% categorias.forEach((c) => { %><option value="<%= c.id %>" <%= producto.category_id === c.id ? 'selected' : '' %>><%= c.name %></option><% }) %>
+          </select>
+        </div>
+        <div>
+          <label for="origin">País de origen</label>
+          <input id="origin" name="origin" value="<%= producto.origin %>" maxlength="60" placeholder="Japón">
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Precio e inventario</h2>
+      <div class="row row-3">
+        <div>
+          <label for="price">Precio (MXN)</label>
+          <input id="price" name="price" inputmode="decimal" value="<%= centsToInput(producto.price_cents) %>" required placeholder="1299.00">
+        </div>
+        <div>
+          <label for="compare_price">Precio anterior <span class="muted">(opcional)</span></label>
+          <input id="compare_price" name="compare_price" inputmode="decimal" value="<%= centsToInput(producto.compare_price_cents) %>" placeholder="1599.00">
+        </div>
+        <div>
+          <label for="stock">Existencias</label>
+          <input id="stock" name="stock" type="number" min="0" step="1" value="<%= producto.stock %>" required>
+        </div>
+      </div>
+      <p class="hint">El precio incluye IVA. Si pones un precio anterior más alto, la tienda muestra el descuento.</p>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section class="card">
+      <h2>Foto</h2>
+      <img class="preview" data-preview src="<%= producto.image || '/img/sin-foto.svg' %>" alt="">
+      <label for="image"><%= producto.image ? 'Cambiar foto' : 'Subir foto' %></label>
+      <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp" data-preview-input>
+      <p class="hint">JPG, PNG o WebP de hasta 5 MB. Se ve mejor en formato cuadrado.</p>
+      <% if (producto.image) { %>
+        <label class="check"><input type="checkbox" name="remove_image" value="1"> Quitar la foto actual</label>
+      <% } %>
+    </section>
+
+    <section class="card">
+      <h2>Visibilidad</h2>
+      <label class="check"><input type="checkbox" name="active" value="1" <%= producto.active ? 'checked' : '' %>> Visible en la tienda</label>
+      <label class="check"><input type="checkbox" name="featured" value="1" <%= producto.featured ? 'checked' : '' %>> Destacar en la página de inicio</label>
+    </section>
+
+    <button class="btn btn-primary btn-wide" type="submit"><%= producto.id ? 'Guardar cambios' : 'Crear producto' %></button>
+  </div>
+</form>
+
+<% if (producto.id) { %>
+<form class="danger" method="post" action="/admin/productos/<%= producto.id %>/eliminar" data-confirm="¿Eliminar este producto? Los pedidos anteriores no se modifican.">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <button class="linklike linklike-danger" type="submit">Eliminar producto</button>
+</form>
+<% } %>
+<%- include('_fin') %>

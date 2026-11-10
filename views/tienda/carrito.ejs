@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+<section class="wrap page">
+  <div class="page-head"><h1>Tu carrito</h1></div>
+  <div data-cart-page>
+    <p class="muted" data-cart-loading>Cargando tu carrito…</p>
+
+    <div class="empty" data-cart-empty hidden>
+      <h2>Tu carrito está vacío</h2>
+      <p class="muted">Cuando agregues productos aparecerán aquí.</p>
+      <a class="btn btn-primary" href="/productos">Ver productos</a>
+    </div>
+
+    <div class="cart-layout" data-cart-full hidden>
+      <div>
+        <p class="notice notice-warn" data-cart-notice hidden></p>
+        <ul class="cart-list" data-cart-list></ul>
+        <a class="link-more" href="/productos">← Seguir comprando</a>
+      </div>
+      <aside class="summary" aria-label="Resumen">
+        <h2>Resumen</h2>
+        <dl class="totals">
+          <div><dt>Subtotal</dt><dd data-sum-subtotal></dd></div>
+          <div><dt>Envío</dt><dd data-sum-shipping></dd></div>
+          <div class="totals-total"><dt>Total</dt><dd data-sum-total></dd></div>
+        </dl>
+        <p class="ship-hint" data-ship-hint hidden></p>
+        <a class="btn btn-primary btn-lg btn-block" href="/pagar" data-go-checkout>Continuar al pago</a>
+        <p class="fine">Precios en MXN con IVA incluido.</p>
+      </aside>
+    </div>
+  </div>
+  <noscript><p class="notice notice-warn">Para usar el carrito necesitas activar JavaScript en tu navegador.</p></noscript>
+</section>
+<%- include('../partials/footer') %>

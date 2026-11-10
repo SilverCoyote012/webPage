@@ -1,0 +1,82 @@
+<%- include('../partials/head') %>
+<%
+  const estado = ESTADOS_PEDIDO[order.status];
+  const pasos = ['pendiente', 'pagado', 'enviado', 'entregado'];
+  const etiquetas = { pendiente: 'Pedido recibido', pagado: 'Pago confirmado', enviado: 'Enviado', entregado: 'Entregado' };
+  const avance = pasos.indexOf(order.status);
+  const esperandoFicha = order.status === 'pendiente' && order.async_pending;
+%>
+<section class="wrap page page-narrow" <%- ['pagado', 'enviado', 'entregado'].includes(order.status) || esperandoFicha ? 'data-order-done' : '' %>>
+  <div class="order-hero order-<%= order.status %>">
+    <p class="eyebrow">Pedido <%= numeroPedido(order.id) %></p>
+    <% if (order.status === 'cancelado' && volvioSinPagar) { %>
+      <h1>No se completó el pago</h1>
+      <p class="lead">No se hizo ningún cargo. Tus productos siguen en el carrito por si quieres intentarlo de nuevo.</p>
+      <a class="btn btn-primary" href="/carrito">Volver al carrito</a>
+    <% } else if (order.status === 'cancelado') { %>
+      <h1>Este pedido fue cancelado</h1>
+      <p class="lead">Si crees que es un error, contáctanos con tu número de pedido.</p>
+      <a class="btn btn-primary" href="/productos">Volver a la tienda</a>
+    <% } else if (esperandoFicha) { %>
+      <h1>Tu pedido está apartado</h1>
+      <p class="lead">En cuanto se acredite tu pago lo preparamos para envío. Las instrucciones llegaron a <strong><%= order.email %></strong>.</p>
+    <% } else if (order.status === 'pendiente') { %>
+      <h1>Falta completar el pago</h1>
+      <p class="lead">Tus productos están apartados por unos minutos mientras se confirma el pago.</p>
+      <% if (paymentMode === 'demo') { %>
+        <a class="btn btn-primary" href="/pago-demo/<%= order.token %>">Completar el pago</a>
+      <% } else { %>
+        <a class="btn btn-primary" href="/carrito">Volver al carrito</a>
+      <% } %>
+    <% } else if (order.status === 'pagado') { %>
+      <h1>¡Gracias, <%= order.customer_name.split(' ')[0] %>! Recibimos tu pago</h1>
+      <p class="lead">Estamos preparando tu paquete. Guarda esta página: aquí verás tu número de guía cuando lo enviemos.</p>
+    <% } else if (order.status === 'enviado') { %>
+      <h1>Tu pedido va en camino</h1>
+      <p class="lead"><% if (order.tracking) { %>Número de guía: <strong class="tracking"><%= order.tracking %></strong><% } else { %>Pronto verás aquí tu número de guía.<% } %></p>
+    <% } else { %>
+      <h1>Pedido entregado</h1>
+      <p class="lead">¡Que lo disfrutes! Gracias por comprar en <%= tienda.store_name %>.</p>
+    <% } %>
+  </div>
+
+  <% if (order.status !== 'cancelado') { %>
+  <ol class="track" aria-label="Avance del pedido">
+    <% pasos.forEach((paso, i) => { %>
+      <li class="<%= i < avance ? 'is-done' : (i === avance ? 'is-now' : '') %>"><span class="track-dot" aria-hidden="true"></span><%= etiquetas[paso] %></li>
+    <% }) %>
+  </ol>
+  <% } %>
+
+  <div class="order-grid">
+    <div class="panel">
+      <h2>Productos</h2>
+      <ul class="mini-list">
+        <% items.forEach((item) => { %>
+          <li>
+            <img src="<%= item.image || '/img/sin-foto.svg' %>" alt="" width="56" height="56">
+            <span class="mini-name"><%= item.name %><small><%= item.quantity %> × <%= money(item.price_cents) %></small></span>
+            <span class="mini-price"><%= money(item.price_cents * item.quantity) %></span>
+          </li>
+        <% }) %>
+      </ul>
+      <dl class="totals">
+        <div><dt>Subtotal</dt><dd><%= money(order.subtotal_cents) %></dd></div>
+        <div><dt>Envío</dt><dd><%= order.shipping_cents ? money(order.shipping_cents) : 'Gratis' %></dd></div>
+        <div class="totals-total"><dt>Total</dt><dd><%= money(order.total_cents) %></dd></div>
+      </dl>
+    </div>
+    <div class="panel">
+      <h2>Envío</h2>
+      <address>
+        <strong><%= order.customer_name %></strong><br>
+        <%= order.address_line %><br>
+        <%= order.neighborhood %>, C.P. <%= order.postal_code %><br>
+        <%= order.city %>, <%= order.state %>
+      </address>
+      <p class="muted">Fecha del pedido: <%= fecha(order.created_at) %></p>
+      <p class="muted">Estado: <span class="pill pill-<%= estado.tone %>"><%= estado.label %></span></p>
+    </div>
+  </div>
+</section>
+<%- include('../partials/footer') %>
